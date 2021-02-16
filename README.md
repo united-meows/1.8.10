@@ -9,6 +9,7 @@ minecraft optiFine_1.8.9_hd_u_m5 with fps improvements and optimizations
 - old animations
 - threaded screenshot system with uploader (screenshot size doesnt work)
 - no fps limit in guis
+- faster world loading times
 
 # todo
 - better maths
