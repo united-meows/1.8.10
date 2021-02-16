@@ -1,6 +1,6 @@
 # 1.8.10
 
-minecraft optiFine_1.8.9_hd_u_m5 with fps improvements and optimizations
+minecraft optifine_1.8.9_hd_u_m5 with fps improvements and optimizations
 
 # features
 
