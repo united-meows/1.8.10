@@ -1,9 +1,15 @@
 package net.minecraft.world.gen.feature;
 
+
 import java.util.List;
 import java.util.Random;
 
 import com.google.common.collect.Lists;
+
+
+import com.google.common.collect.Lists;
+import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLeaves;
@@ -14,7 +20,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class WorldGenBigTree extends WorldGenAbstractTree
 {
@@ -84,6 +92,7 @@ public class WorldGenBigTree extends WorldGenAbstractTree
                     {
                         int i1 = this.basePos.getX() - blockpos.getX();
                         int j1 = this.basePos.getZ() - blockpos.getZ();
+
                         double d4 = (double)blockpos.getY() - MeowMath.sqrt((double)(i1 * i1 + j1 * j1)) * this.branchSlope;
                         int k1 = d4 > (double)j ? j : (int)d4;
                         BlockPos blockpos2 = new BlockPos(this.basePos.getX(), k1, this.basePos.getZ());

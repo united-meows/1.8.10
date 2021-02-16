@@ -3,6 +3,7 @@ package net.minecraft.client.renderer.entity;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
@@ -51,13 +52,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+
 import net.minecraft.item.EnumAction;
+
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemFishFood;
 import net.minecraft.item.ItemPotion;
 import net.minecraft.item.ItemStack;
+
 import net.minecraft.item.ItemSword;
+
 import net.minecraft.src.Config;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
@@ -71,6 +76,7 @@ import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
 import net.optifine.shaders.Shaders;
 import net.optifine.shaders.ShadersRender;
+
 import pisi.unitedmeows.meowlib.etc.MLibSettings;
 import pisi.unitedmeows.minecraft.Settings;
 
@@ -1128,4 +1134,5 @@ public class RenderItem implements IResourceManagerReloadListener {
 			   j1, k1);
 	  }
    }
+
 }

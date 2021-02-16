@@ -8,7 +8,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class EntityEnderEye extends Entity
 {
@@ -143,6 +145,7 @@ public class EntityEnderEye extends Entity
         {
             double d0 = this.targetX - this.posX;
             double d1 = this.targetZ - this.posZ;
+
             float f1 = (float)MeowMath.sqrt(d0 * d0 + d1 * d1);
             float f2 = (float)MathHelper.atan2(d1, d0);
             double d2 = (double)f + (double)(f1 - f) * 0.0025D;

@@ -29,6 +29,7 @@ import net.optifine.util.FontUtils;
 import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
 
+
 public class FontRenderer implements IResourceManagerReloadListener {
 	private static final ResourceLocation[] unicodePageLocations = new ResourceLocation[256];
 
@@ -975,4 +976,5 @@ public class FontRenderer implements IResourceManagerReloadListener {
 	protected InputStream getResourceInputStream(ResourceLocation p_getResourceInputStream_1_) throws IOException {
 		return Minecraft.getMinecraft().getResourceManager().getResource(p_getResourceInputStream_1_).getInputStream();
 	}
+
 }

@@ -12,6 +12,7 @@ import net.minecraft.util.LongHashMap;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.NextTickListEntry;
 
+
 public class NextTickHashSet extends TreeSet {
 	private LongHashMap longHashMap = new LongHashMap();
 	private int minX = Integer.MIN_VALUE;
@@ -145,4 +146,5 @@ public class NextTickHashSet extends TreeSet {
 		this.maxX = Integer.MIN_VALUE;
 		this.maxZ = Integer.MIN_VALUE;
 	}
+
 }

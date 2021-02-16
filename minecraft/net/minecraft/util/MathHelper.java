@@ -3,6 +3,7 @@ package net.minecraft.util;
 import java.util.Random;
 import java.util.UUID;
 import net.optifine.util.MathUtils;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
 
 public class MathHelper {
@@ -18,7 +19,6 @@ public class MathHelper {
    public static final float deg2Rad = MathUtils.roundToFloat(0.017453292519943295D);
    private static final float[] SIN_TABLE_FAST = new float[4096];
    public static boolean fastMath = false;
-
    /**
     * A table of sin values computed from 0 (inclusive) to 2*pi (exclusive), with steps of 2*PI / 65536.
     */

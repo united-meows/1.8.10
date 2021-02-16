@@ -39,7 +39,9 @@ import net.optifine.CustomGuis;
 import net.optifine.DynamicLights;
 import net.optifine.override.PlayerControllerOF;
 import net.optifine.reflect.Reflector;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class WorldClient extends World
 {
@@ -457,6 +459,7 @@ public class WorldClient extends World
 
         if (distanceDelay && d0 > 100.0D)
         {
+
             double d1 = MeowMath.sqrt(d0) / 40.0D;
             this.mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)(d1 * 20.0D));
         }

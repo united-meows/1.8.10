@@ -12,7 +12,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class EntityPotion extends EntityThrowable
 {
@@ -114,7 +116,9 @@ public class EntityPotion extends EntityThrowable
 
                         if (d0 < 16.0D)
                         {
+
                             double d1 = 1.0D - MeowMath.sqrt(d0) / 4.0D;
+
 
                             if (entitylivingbase == p_70184_1_.entityHit)
                             {

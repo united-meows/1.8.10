@@ -37,6 +37,7 @@ import net.optifine.reflect.Reflector;
 import net.optifine.util.MemoryMonitor;
 import net.optifine.util.NativeMemory;
 
+
 public class GuiOverlayDebug extends Gui {
    private final Minecraft mc;
    private final FontRenderer fontRenderer;
@@ -349,4 +350,5 @@ public class GuiOverlayDebug extends Gui {
    }
 
    private static long bytesToMb(long bytes) { return bytes / 1024L / 1024L; }
+
 }

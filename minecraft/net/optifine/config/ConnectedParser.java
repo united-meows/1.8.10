@@ -28,6 +28,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.optifine.ConnectedProperties;
 import net.optifine.util.EntityUtils;
 
+
 @SuppressWarnings("all")
 public class ConnectedParser {
 	private String context = null;

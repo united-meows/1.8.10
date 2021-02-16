@@ -23,213 +23,160 @@ import net.optifine.player.CapeUtils;
 import net.optifine.player.PlayerConfigurations;
 import net.optifine.reflect.Reflector;
 
-public abstract class AbstractClientPlayer extends EntityPlayer
-{
-    private NetworkPlayerInfo playerInfo;
-    private ResourceLocation locationOfCape = null;
-    private long reloadCapeTimeMs = 0L;
-    private boolean elytraOfCape = false;
-    private String nameClear = null;
-    private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
+public abstract class AbstractClientPlayer extends EntityPlayer {
+   private NetworkPlayerInfo playerInfo;
+   private ResourceLocation locationOfCape = null;
+   private long reloadCapeTimeMs = 0L;
+   private boolean elytraOfCape = false;
+   private String nameClear = null;
+   private static final ResourceLocation TEXTURE_ELYTRA = new ResourceLocation("textures/entity/elytra.png");
 
-    public AbstractClientPlayer(World worldIn, GameProfile playerProfile)
-    {
-        super(worldIn, playerProfile);
-        this.nameClear = playerProfile.getName();
+   public AbstractClientPlayer(World worldIn, GameProfile playerProfile)
+   {
+	  super(worldIn, playerProfile);
+	  this.nameClear = playerProfile.getName();
+	  if (this.nameClear != null && !this.nameClear.isEmpty()) {
+		 this.nameClear = StringUtils.stripControlCodes(this.nameClear);
+	  }
+	  CapeUtils.downloadCape(this);
+	  PlayerConfigurations.getPlayerConfiguration(this);
+   }
 
-        if (this.nameClear != null && !this.nameClear.isEmpty())
-        {
-            this.nameClear = StringUtils.stripControlCodes(this.nameClear);
-        }
+   /**
+    * Returns true if the player is in spectator mode.
+    */
+   public boolean isSpectator() {
+	  NetworkPlayerInfo networkplayerinfo = Minecraft.getMinecraft().getNetHandler()
+			.getPlayerInfo(this.getGameProfile().getId());
+	  return networkplayerinfo != null && networkplayerinfo.getGameType() == WorldSettings.GameType.SPECTATOR;
+   }
 
-        CapeUtils.downloadCape(this);
-        PlayerConfigurations.getPlayerConfiguration(this);
-    }
+   /**
+    * Checks if this instance of AbstractClientPlayer has any associated player data.
+    */
+   public boolean hasPlayerInfo() { return this.getPlayerInfo() != null; }
 
-    /**
-     * Returns true if the player is in spectator mode.
-     */
-    public boolean isSpectator()
-    {
-        NetworkPlayerInfo networkplayerinfo = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.getGameProfile().getId());
-        return networkplayerinfo != null && networkplayerinfo.getGameType() == WorldSettings.GameType.SPECTATOR;
-    }
+   protected NetworkPlayerInfo getPlayerInfo() {
+	  if (this.playerInfo == null) {
+		 this.playerInfo = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.getUniqueID());
+	  }
+	  return this.playerInfo;
+   }
 
-    /**
-     * Checks if this instance of AbstractClientPlayer has any associated player data.
-     */
-    public boolean hasPlayerInfo()
-    {
-        return this.getPlayerInfo() != null;
-    }
+   /**
+    * Returns true if the player has an associated skin.
+    */
+   public boolean hasSkin() {
+	  NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+	  return networkplayerinfo != null && networkplayerinfo.hasLocationSkin();
+   }
 
-    protected NetworkPlayerInfo getPlayerInfo()
-    {
-        if (this.playerInfo == null)
-        {
-            this.playerInfo = Minecraft.getMinecraft().getNetHandler().getPlayerInfo(this.getUniqueID());
-        }
+   /**
+    * Returns true if the player instance has an associated skin.
+    */
+   public ResourceLocation getLocationSkin() {
+	  NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+	  return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID())
+			: networkplayerinfo.getLocationSkin();
+   }
 
-        return this.playerInfo;
-    }
+   public ResourceLocation getLocationCape() {
+	  if (!Config.isShowCapes()) {
+		 return null;
+	  }
+	  else {
+		 if (this.reloadCapeTimeMs != 0L && System.currentTimeMillis() > this.reloadCapeTimeMs) {
+			CapeUtils.reloadCape(this);
+			this.reloadCapeTimeMs = 0L;
+		 }
+		 if (this.locationOfCape != null) {
+			return this.locationOfCape;
+		 }
+		 else {
+			NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+			return networkplayerinfo == null ? null : networkplayerinfo.getLocationCape();
+		 }
+	  }
+   }
 
-    /**
-     * Returns true if the player has an associated skin.
-     */
-    public boolean hasSkin()
-    {
-        NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo != null && networkplayerinfo.hasLocationSkin();
-    }
+   public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String username) {
+	  TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
+	  ITextureObject itextureobject = texturemanager.getTexture(resourceLocationIn);
+	  if (itextureobject == null) {
+		 itextureobject = new ThreadDownloadImageData((File) null,
+			   String.format("http://skins.minecraft.net/MinecraftSkins/%s.png",
+					 new Object[] { StringUtils.stripControlCodes(username) }),
+			   DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
+		 texturemanager.loadTexture(resourceLocationIn, itextureobject);
+	  }
+	  return (ThreadDownloadImageData) itextureobject;
+   }
 
-    /**
-     * Returns true if the player instance has an associated skin.
-     */
-    public ResourceLocation getLocationSkin()
-    {
-        NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getDefaultSkin(this.getUniqueID()) : networkplayerinfo.getLocationSkin();
-    }
+   /**
+    * Returns true if the username has an associated skin.
+    */
+   public static ResourceLocation getLocationSkin(String username) {
+	  return new ResourceLocation("skins/" + StringUtils.stripControlCodes(username));
+   }
 
-    public ResourceLocation getLocationCape()
-    {
-        if (!Config.isShowCapes())
-        {
-            return null;
-        }
-        else
-        {
-            if (this.reloadCapeTimeMs != 0L && System.currentTimeMillis() > this.reloadCapeTimeMs)
-            {
-                CapeUtils.reloadCape(this);
-                this.reloadCapeTimeMs = 0L;
-            }
+   public String getSkinType() {
+	  NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
+	  return networkplayerinfo == null ? DefaultPlayerSkin.getSkinType(this.getUniqueID())
+			: networkplayerinfo.getSkinType();
+   }
 
-            if (this.locationOfCape != null)
-            {
-                return this.locationOfCape;
-            }
-            else
-            {
-                NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
-                return networkplayerinfo == null ? null : networkplayerinfo.getLocationCape();
-            }
-        }
-    }
+   public float getFovModifier() {
+	  float f = 1.0F;
+	  if (this.capabilities.isFlying) {
+		 f *= 1.1F;
+	  }
+	  IAttributeInstance iattributeinstance = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+	  f = (float) ((double) f
+			* ((iattributeinstance.getAttributeValue() / (double) this.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
+	  if (this.capabilities.getWalkSpeed() == 0.0F || Float.isNaN(f) || Float.isInfinite(f)) {
+		 f = 1.0F;
+	  }
+	  if (this.isUsingItem() && this.getItemInUse().getItem() == Items.bow) {
+		 int i = this.getItemInUseDuration();
+		 float f1 = (float) i / 20.0F;
+		 if (f1 > 1.0F) {
+			f1 = 1.0F;
+		 }
+		 else {
+			f1 = f1 * f1;
+		 }
+		 f *= 1.0F - f1 * 0.15F;
+	  }
+	  return Reflector.ForgeHooksClient_getOffsetFOV.exists()
+			? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, new Object[] { this, Float.valueOf(f) })
+			: f;
+   }
 
-    public static ThreadDownloadImageData getDownloadImageSkin(ResourceLocation resourceLocationIn, String username)
-    {
-        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-        ITextureObject itextureobject = texturemanager.getTexture(resourceLocationIn);
+   public String getNameClear() { return this.nameClear; }
 
-        if (itextureobject == null)
-        {
-            itextureobject = new ThreadDownloadImageData((File)null, String.format("http://skins.minecraft.net/MinecraftSkins/%s.png", new Object[] {StringUtils.stripControlCodes(username)}), DefaultPlayerSkin.getDefaultSkin(getOfflineUUID(username)), new ImageBufferDownload());
-            texturemanager.loadTexture(resourceLocationIn, itextureobject);
-        }
+   public ResourceLocation getLocationOfCape() { return this.locationOfCape; }
 
-        return (ThreadDownloadImageData)itextureobject;
-    }
+   public void setLocationOfCape(ResourceLocation p_setLocationOfCape_1_) {
+	  this.locationOfCape = p_setLocationOfCape_1_;
+   }
 
-    /**
-     * Returns true if the username has an associated skin.
-     */
-    public static ResourceLocation getLocationSkin(String username)
-    {
-        return new ResourceLocation("skins/" + StringUtils.stripControlCodes(username));
-    }
+   public boolean hasElytraCape() {
+	  ResourceLocation resourcelocation = this.getLocationCape();
+	  return resourcelocation == null ? false : (resourcelocation == this.locationOfCape ? this.elytraOfCape : true);
+   }
 
-    public String getSkinType()
-    {
-        NetworkPlayerInfo networkplayerinfo = this.getPlayerInfo();
-        return networkplayerinfo == null ? DefaultPlayerSkin.getSkinType(this.getUniqueID()) : networkplayerinfo.getSkinType();
-    }
+   public void setElytraOfCape(boolean p_setElytraOfCape_1_) { this.elytraOfCape = p_setElytraOfCape_1_; }
 
-    public float getFovModifier()
-    {
-        float f = 1.0F;
+   public boolean isElytraOfCape() { return this.elytraOfCape; }
 
-        if (this.capabilities.isFlying)
-        {
-            f *= 1.1F;
-        }
+   public long getReloadCapeTimeMs() { return this.reloadCapeTimeMs; }
 
-        IAttributeInstance iattributeinstance = this.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
-        f = (float)((double)f * ((iattributeinstance.getAttributeValue() / (double)this.capabilities.getWalkSpeed() + 1.0D) / 2.0D));
+   public void setReloadCapeTimeMs(long p_setReloadCapeTimeMs_1_) { this.reloadCapeTimeMs = p_setReloadCapeTimeMs_1_; }
 
-        if (this.capabilities.getWalkSpeed() == 0.0F || Float.isNaN(f) || Float.isInfinite(f))
-        {
-            f = 1.0F;
-        }
-
-        if (this.isUsingItem() && this.getItemInUse().getItem() == Items.bow)
-        {
-            int i = this.getItemInUseDuration();
-            float f1 = (float)i / 20.0F;
-
-            if (f1 > 1.0F)
-            {
-                f1 = 1.0F;
-            }
-            else
-            {
-                f1 = f1 * f1;
-            }
-
-            f *= 1.0F - f1 * 0.15F;
-        }
-
-        return Reflector.ForgeHooksClient_getOffsetFOV.exists() ? Reflector.callFloat(Reflector.ForgeHooksClient_getOffsetFOV, new Object[] {this, Float.valueOf(f)}): f;
-    }
-    
-
-
-    public String getNameClear()
-    {
-        return this.nameClear;
-    }
-
-    public ResourceLocation getLocationOfCape()
-    {
-        return this.locationOfCape;
-    }
-
-    public void setLocationOfCape(ResourceLocation p_setLocationOfCape_1_)
-    {
-        this.locationOfCape = p_setLocationOfCape_1_;
-    }
-
-    public boolean hasElytraCape()
-    {
-        ResourceLocation resourcelocation = this.getLocationCape();
-        return resourcelocation == null ? false : (resourcelocation == this.locationOfCape ? this.elytraOfCape : true);
-    }
-
-    public void setElytraOfCape(boolean p_setElytraOfCape_1_)
-    {
-        this.elytraOfCape = p_setElytraOfCape_1_;
-    }
-
-    public boolean isElytraOfCape()
-    {
-        return this.elytraOfCape;
-    }
-
-    public long getReloadCapeTimeMs()
-    {
-        return this.reloadCapeTimeMs;
-    }
-
-    public void setReloadCapeTimeMs(long p_setReloadCapeTimeMs_1_)
-    {
-        this.reloadCapeTimeMs = p_setReloadCapeTimeMs_1_;
-    }
-
-    /**
-     * interpolated look vector
-     */
-    public Vec3 getLook(float partialTicks)
-    {
-        return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
-    }
+   /**
+    * interpolated look vector
+    */
+   public Vec3 getLook(float partialTicks) {
+	  return this.getVectorForRotation(this.rotationPitch, this.rotationYaw);
+   }
 }

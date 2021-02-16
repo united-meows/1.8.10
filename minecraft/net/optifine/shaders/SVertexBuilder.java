@@ -4,8 +4,10 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
+
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.BlockStateBase;
@@ -15,7 +17,12 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+
 
 public class SVertexBuilder
 {
@@ -246,11 +253,13 @@ public class SVertexBuilder
         float f41 = (f26 * f24 - f28 * f21) * f36;
         float f42 = (f26 * f25 - f28 * f22) * f36;
         f33 = f37 * f37 + f38 * f38 + f39 * f39;
+
         f34 = (double)f33 != 0.0D ? (float)(1.0D / MeowMath.sqrt((double)f33)) : 1.0F;
         f37 = f37 * f34;
         f38 = f38 * f34;
         f39 = f39 * f34;
         f33 = f40 * f40 + f41 * f41 + f42 * f42;
+
         f34 = (double)f33 != 0.0D ? (float)(1.0D / MeowMath.sqrt((double)f33)) : 1.0F;
         f40 = f40 * f34;
         f41 = f41 * f34;

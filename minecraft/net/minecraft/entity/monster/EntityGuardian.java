@@ -1,7 +1,6 @@
 package net.minecraft.entity.monster;
 
 import com.google.common.base.Predicate;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -38,6 +37,7 @@ import net.minecraft.util.WeightedRandomFishable;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class EntityGuardian extends EntityMob
 {
@@ -374,7 +374,6 @@ public class EntityGuardian extends EntityMob
                     double d1 = entitylivingbase.posY + (double)(entitylivingbase.height * 0.5F) - (this.posY + (double)this.getEyeHeight());
                     double d2 = entitylivingbase.posZ - this.posZ;
                     double d3 = MeowMath.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
-                    d0 = d0 / d3;
                     d1 = d1 / d3;
                     d2 = d2 / d3;
                     double d4 = this.rand.nextDouble();

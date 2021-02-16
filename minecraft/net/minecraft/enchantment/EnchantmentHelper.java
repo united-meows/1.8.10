@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.WeightedRandom;
+
 import pisi.unitedmeows.meowlib.etc.MLibSettings;
 import pisi.unitedmeows.minecraft.Settings;
 
@@ -157,7 +158,7 @@ public class EnchantmentHelper {
 	   * <p>
 	   * Bugs fixed: - https://bugs.mojang.com/browse/MC-128547
 	   */
-	    if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
+	  if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
 		 EnchantmentHelper.ModifierDamage enchantmentModifierDamage = new EnchantmentHelper.ModifierDamage();
 		 enchantmentModifierDamage.damageModifier = 0;
 		 enchantmentModifierDamage.source = source;
@@ -180,7 +181,7 @@ public class EnchantmentHelper {
    }
 
    public static float getModifierForCreature(ItemStack p_152377_0_, EnumCreatureAttribute p_152377_1_) {
-	    if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
+	  if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
 		 EnchantmentHelper.ModifierLiving enchantmentModifierLiving = new EnchantmentHelper.ModifierLiving();
 		 enchantmentModifierLiving.livingModifier = 0.0F;
 		 enchantmentModifierLiving.entityLiving = p_152377_1_;
@@ -220,7 +221,7 @@ public class EnchantmentHelper {
    }
 
    public static void applyArthropodEnchantments(EntityLivingBase p_151385_0_, Entity p_151385_1_) {
-	    if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
+	  if (Settings.getBool(MLibSettings.FIX_MEMORY_LEAKS_ENCHANTMENTHELPERMCC)) {
 		 EnchantmentHelper.DamageIterator enchantmentIteratorDamage = new EnchantmentHelper.DamageIterator();
 		 enchantmentIteratorDamage.user = p_151385_0_;
 		 enchantmentIteratorDamage.target = p_151385_1_;

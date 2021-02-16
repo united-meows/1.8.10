@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderGlobal;
 import net.minecraft.entity.Entity;
@@ -33,7 +32,9 @@ import net.optifine.config.IObjectLocator;
 import net.optifine.config.ItemLocator;
 import net.optifine.reflect.ReflectorForge;
 import net.optifine.util.PropertiesOrdered;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class DynamicLights
 {
@@ -298,6 +299,7 @@ public class DynamicLights
 
                     if (d7 <= 56.25D)
                     {
+
                         double d8 = MeowMath.sqrt(d7);
                         double d9 = 1.0D - d8 / 7.5D;
                         double d10 = d9 * (double)k;

@@ -11,7 +11,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.pathfinder.WalkNodeProcessor;
+
 import pisi.unitedmeows.meowlib.math.MeowMath;
+
 
 public class PathNavigateGround extends PathNavigate
 {
@@ -120,6 +122,7 @@ public class PathNavigateGround extends PathNavigate
         else
         {
             double d3 = 1.0D / MeowMath.sqrt(d2);
+
             d0 = d0 * d3;
             d1 = d1 * d3;
             sizeX = sizeX + 2;

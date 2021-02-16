@@ -12,16 +12,9 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GLContext;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -54,7 +47,10 @@ import net.optifine.TextureAnimations;
 import net.optifine.entity.model.CustomEntityModels;
 import net.optifine.shaders.MultiTexID;
 import net.optifine.shaders.Shaders;
-import pisi.unitedmeows.meowlib.math.MeowMath;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+import org.lwjgl.opengl.GLContext;
 
 public class TextureUtils
 {
@@ -612,7 +608,7 @@ public class TextureUtils
 
             if (aint2.length != i * j)
             {
-                int k = (int)Math.round(MeowMath.sqrt((double)aint2.length));
+                int k = (int)Math.round(Math.sqrt((double)aint2.length));
 
                 if (k * k != aint2.length)
                 {

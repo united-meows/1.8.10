@@ -1,5 +1,6 @@
 package net.minecraft.client.model;
 
+
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.WorldRenderer;
@@ -249,4 +250,5 @@ public class ModelBox {
 		this.boxName = name;
 		return this;
 	}
+
 }

@@ -3,9 +3,7 @@ package net.minecraft.client.gui;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
-
 import eu.the5zig.mod.util.FPSCalculator;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
@@ -137,6 +135,8 @@ public class GuiIngame extends Gui
         int j = scaledresolution.getScaledHeight();
         this.mc.entityRenderer.setupOverlayRendering();
         GlStateManager.enableBlend();
+
+        // TODO debug shit
         FPSCalculator.INSTANCE.render();
         this.getFontRenderer().drawString("fps: " + mc.getDebugFPS(), i / 2 - 55, j / 2 - 2, -1);
         if (Config.isVignetteEnabled())

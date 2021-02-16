@@ -3,6 +3,7 @@ package net.minecraft.client.model;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
+
 import pisi.unitedmeows.meowlib.etc.MLibSettings;
 import pisi.unitedmeows.minecraft.Settings;
 
@@ -236,4 +237,5 @@ public class ModelBiped extends ModelBase {
    }
 
    public void postRenderArm(float scale) { this.bipedRightArm.postRender(scale); }
+
 }
