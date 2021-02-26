@@ -17,3 +17,4 @@ minecraft optifine_1.8.9_hd_u_m5 with fps improvements and optimizations
 - less memory usage 
 - better lightning system
 - optifine cape editor ingame
+- dynamic linking for meowlib
