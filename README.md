@@ -1,6 +1,6 @@
 # 1.8.10
 	
-  This project is currently **_work in progress_**.
+  This project is currently **_work in progress_**.<br>
   Minecraft Forge 1.8.9 - 11.15.1.2318 with more performance and stability.<br>  
 	Old 1.8.10 [link here](https://github.com/united-meows/1.8.10-old/ ":DDDDD").
   
