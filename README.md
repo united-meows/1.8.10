@@ -1,7 +1,7 @@
 # 1.8.10
 	
   This project is currently **_work in progress_**.<br>
-  Minecraft ~~Forge 1.8.9 - 11.15.1.2318~~ (cant build forge because of forge servers) 1.8.9 Optifine HD MD5 Ultra with more performance and stability.<br>  
+  Minecraft ~~Forge 1.8.9 - 11.15.1.2318~~ (cant build forge because of forge servers) 1.8.9 Optifine HD M6_Pre1 with more performance and stability.<br>  
 	Old 1.8.10 [link here](https://github.com/united-meows/1.8.10-old/ ":DDDDD").
   
 # usage

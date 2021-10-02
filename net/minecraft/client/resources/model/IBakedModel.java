@@ -6,18 +6,19 @@ import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 
-public interface IBakedModel {
-   List<BakedQuad> getFaceQuads(EnumFacing p_177551_1_);
+public interface IBakedModel
+{
+    List<BakedQuad> getFaceQuads(EnumFacing facing);
 
-   List<BakedQuad> getGeneralQuads();
+    List<BakedQuad> getGeneralQuads();
 
-   boolean isAmbientOcclusion();
+    boolean isAmbientOcclusion();
 
-   boolean isGui3d();
+    boolean isGui3d();
 
-   boolean isBuiltInRenderer();
+    boolean isBuiltInRenderer();
 
-   TextureAtlasSprite getParticleTexture();
+    TextureAtlasSprite getParticleTexture();
 
-   ItemCameraTransforms getItemCameraTransforms();
+    ItemCameraTransforms getItemCameraTransforms();
 }

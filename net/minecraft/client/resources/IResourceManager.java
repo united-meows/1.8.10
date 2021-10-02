@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.Set;
 import net.minecraft.util.ResourceLocation;
 
-public interface IResourceManager {
-   Set<String> getResourceDomains();
+public interface IResourceManager
+{
+    Set<String> getResourceDomains();
 
-   IResource getResource(ResourceLocation location) throws IOException;
+    IResource getResource(ResourceLocation location) throws IOException;
 
-   List<IResource> getAllResources(ResourceLocation location) throws IOException;
+    List<IResource> getAllResources(ResourceLocation location) throws IOException;
 }

@@ -8,134 +8,180 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 
-public abstract class StructureStart {
-   protected LinkedList<StructureComponent> components = new LinkedList();
-   protected StructureBoundingBox boundingBox;
-   private int chunkPosX;
-   private int chunkPosZ;
+public abstract class StructureStart
+{
+    protected LinkedList<StructureComponent> components = new LinkedList();
+    protected StructureBoundingBox boundingBox;
+    private int chunkPosX;
+    private int chunkPosZ;
 
-   public StructureStart() {
-   }
+    public StructureStart()
+    {
+    }
 
-   public StructureStart(int chunkX, int chunkZ) {
-      this.chunkPosX = chunkX;
-      this.chunkPosZ = chunkZ;
-   }
+    public StructureStart(int chunkX, int chunkZ)
+    {
+        this.chunkPosX = chunkX;
+        this.chunkPosZ = chunkZ;
+    }
 
-   public StructureBoundingBox getBoundingBox() {
-      return this.boundingBox;
-   }
+    public StructureBoundingBox getBoundingBox()
+    {
+        return this.boundingBox;
+    }
 
-   public LinkedList<StructureComponent> getComponents() {
-      return this.components;
-   }
+    public LinkedList<StructureComponent> getComponents()
+    {
+        return this.components;
+    }
 
-   public void generateStructure(World worldIn, Random rand, StructureBoundingBox structurebb) {
-      Iterator<StructureComponent> iterator = this.components.iterator();
+    /**
+     * Keeps iterating Structure Pieces and spawning them until the checks tell it to stop
+     */
+    public void generateStructure(World worldIn, Random rand, StructureBoundingBox structurebb)
+    {
+        Iterator<StructureComponent> iterator = this.components.iterator();
 
-      while(iterator.hasNext()) {
-         StructureComponent structurecomponent = (StructureComponent)iterator.next();
-         if(structurecomponent.getBoundingBox().intersectsWith(structurebb) && !structurecomponent.addComponentParts(worldIn, rand, structurebb)) {
-            iterator.remove();
-         }
-      }
-   }
+        while (iterator.hasNext())
+        {
+            StructureComponent structurecomponent = (StructureComponent)iterator.next();
 
-   protected void updateBoundingBox() {
-      this.boundingBox = StructureBoundingBox.getNewBoundingBox();
+            if (structurecomponent.getBoundingBox().intersectsWith(structurebb) && !structurecomponent.addComponentParts(worldIn, rand, structurebb))
+            {
+                iterator.remove();
+            }
+        }
+    }
 
-      for(StructureComponent structurecomponent : this.components) {
-         this.boundingBox.expandTo(structurecomponent.getBoundingBox());
-      }
-   }
+    /**
+     * Calculates total bounding box based on components' bounding boxes and saves it to boundingBox
+     */
+    protected void updateBoundingBox()
+    {
+        this.boundingBox = StructureBoundingBox.getNewBoundingBox();
 
-   public NBTTagCompound writeStructureComponentsToNBT(int chunkX, int chunkZ) {
-      NBTTagCompound nbttagcompound = new NBTTagCompound();
-      nbttagcompound.setString("id", MapGenStructureIO.getStructureStartName(this));
-      nbttagcompound.setInteger("ChunkX", chunkX);
-      nbttagcompound.setInteger("ChunkZ", chunkZ);
-      nbttagcompound.setTag("BB", this.boundingBox.toNBTTagIntArray());
-      NBTTagList nbttaglist = new NBTTagList();
+        for (StructureComponent structurecomponent : this.components)
+        {
+            this.boundingBox.expandTo(structurecomponent.getBoundingBox());
+        }
+    }
 
-      for(StructureComponent structurecomponent : this.components) {
-         nbttaglist.appendTag(structurecomponent.createStructureBaseNBT());
-      }
+    public NBTTagCompound writeStructureComponentsToNBT(int chunkX, int chunkZ)
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        nbttagcompound.setString("id", MapGenStructureIO.getStructureStartName(this));
+        nbttagcompound.setInteger("ChunkX", chunkX);
+        nbttagcompound.setInteger("ChunkZ", chunkZ);
+        nbttagcompound.setTag("BB", this.boundingBox.toNBTTagIntArray());
+        NBTTagList nbttaglist = new NBTTagList();
 
-      nbttagcompound.setTag("Children", nbttaglist);
-      this.writeToNBT(nbttagcompound);
-      return nbttagcompound;
-   }
+        for (StructureComponent structurecomponent : this.components)
+        {
+            nbttaglist.appendTag(structurecomponent.createStructureBaseNBT());
+        }
 
-   public void writeToNBT(NBTTagCompound tagCompound) {
-   }
+        nbttagcompound.setTag("Children", nbttaglist);
+        this.writeToNBT(nbttagcompound);
+        return nbttagcompound;
+    }
 
-   public void readStructureComponentsFromNBT(World worldIn, NBTTagCompound tagCompound) {
-      this.chunkPosX = tagCompound.getInteger("ChunkX");
-      this.chunkPosZ = tagCompound.getInteger("ChunkZ");
-      if(tagCompound.hasKey("BB")) {
-         this.boundingBox = new StructureBoundingBox(tagCompound.getIntArray("BB"));
-      }
+    public void writeToNBT(NBTTagCompound tagCompound)
+    {
+    }
 
-      NBTTagList nbttaglist = tagCompound.getTagList("Children", 10);
+    public void readStructureComponentsFromNBT(World worldIn, NBTTagCompound tagCompound)
+    {
+        this.chunkPosX = tagCompound.getInteger("ChunkX");
+        this.chunkPosZ = tagCompound.getInteger("ChunkZ");
 
-      for(int i = 0; i < nbttaglist.tagCount(); ++i) {
-         this.components.add(MapGenStructureIO.getStructureComponent(nbttaglist.getCompoundTagAt(i), worldIn));
-      }
+        if (tagCompound.hasKey("BB"))
+        {
+            this.boundingBox = new StructureBoundingBox(tagCompound.getIntArray("BB"));
+        }
 
-      this.readFromNBT(tagCompound);
-   }
+        NBTTagList nbttaglist = tagCompound.getTagList("Children", 10);
 
-   public void readFromNBT(NBTTagCompound tagCompound) {
-   }
+        for (int i = 0; i < nbttaglist.tagCount(); ++i)
+        {
+            this.components.add(MapGenStructureIO.getStructureComponent(nbttaglist.getCompoundTagAt(i), worldIn));
+        }
 
-   protected void markAvailableHeight(World worldIn, Random rand, int p_75067_3_) {
-      int i = worldIn.func_181545_F() - p_75067_3_;
-      int j = this.boundingBox.getYSize() + 1;
-      if(j < i) {
-         j += rand.nextInt(i - j);
-      }
+        this.readFromNBT(tagCompound);
+    }
 
-      int k = j - this.boundingBox.maxY;
-      this.boundingBox.offset(0, k, 0);
+    public void readFromNBT(NBTTagCompound tagCompound)
+    {
+    }
 
-      for(StructureComponent structurecomponent : this.components) {
-         structurecomponent.func_181138_a(0, k, 0);
-      }
-   }
+    /**
+     * offsets the structure Bounding Boxes up to a certain height, typically 63 - 10
+     */
+    protected void markAvailableHeight(World worldIn, Random rand, int p_75067_3_)
+    {
+        int i = worldIn.getSeaLevel() - p_75067_3_;
+        int j = this.boundingBox.getYSize() + 1;
 
-   protected void setRandomHeight(World worldIn, Random rand, int p_75070_3_, int p_75070_4_) {
-      int i = p_75070_4_ - p_75070_3_ + 1 - this.boundingBox.getYSize();
-      int j = 1;
-      if(i > 1) {
-         j = p_75070_3_ + rand.nextInt(i);
-      } else {
-         j = p_75070_3_;
-      }
+        if (j < i)
+        {
+            j += rand.nextInt(i - j);
+        }
 
-      int k = j - this.boundingBox.minY;
-      this.boundingBox.offset(0, k, 0);
+        int k = j - this.boundingBox.maxY;
+        this.boundingBox.offset(0, k, 0);
 
-      for(StructureComponent structurecomponent : this.components) {
-         structurecomponent.func_181138_a(0, k, 0);
-      }
-   }
+        for (StructureComponent structurecomponent : this.components)
+        {
+            structurecomponent.func_181138_a(0, k, 0);
+        }
+    }
 
-   public boolean isSizeableStructure() {
-      return true;
-   }
+    protected void setRandomHeight(World worldIn, Random rand, int p_75070_3_, int p_75070_4_)
+    {
+        int i = p_75070_4_ - p_75070_3_ + 1 - this.boundingBox.getYSize();
+        int j = 1;
 
-   public boolean func_175788_a(ChunkCoordIntPair pair) {
-      return true;
-   }
+        if (i > 1)
+        {
+            j = p_75070_3_ + rand.nextInt(i);
+        }
+        else
+        {
+            j = p_75070_3_;
+        }
 
-   public void func_175787_b(ChunkCoordIntPair pair) {
-   }
+        int k = j - this.boundingBox.minY;
+        this.boundingBox.offset(0, k, 0);
 
-   public int getChunkPosX() {
-      return this.chunkPosX;
-   }
+        for (StructureComponent structurecomponent : this.components)
+        {
+            structurecomponent.func_181138_a(0, k, 0);
+        }
+    }
 
-   public int getChunkPosZ() {
-      return this.chunkPosZ;
-   }
+    /**
+     * currently only defined for Villages, returns true if Village has more than 2 non-road components
+     */
+    public boolean isSizeableStructure()
+    {
+        return true;
+    }
+
+    public boolean func_175788_a(ChunkCoordIntPair pair)
+    {
+        return true;
+    }
+
+    public void func_175787_b(ChunkCoordIntPair pair)
+    {
+    }
+
+    public int getChunkPosX()
+    {
+        return this.chunkPosX;
+    }
+
+    public int getChunkPosZ()
+    {
+        return this.chunkPosZ;
+    }
 }

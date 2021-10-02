@@ -10,46 +10,90 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public class RConConsoleSource implements ICommandSender {
-   private static final RConConsoleSource instance = new RConConsoleSource();
-   private StringBuffer buffer = new StringBuffer();
+public class RConConsoleSource implements ICommandSender
+{
+    /** Single instance of RConConsoleSource */
+    private static final RConConsoleSource instance = new RConConsoleSource();
 
-   public String getName() {
-      return "Rcon";
-   }
+    /** RCon string buffer for log. */
+    private StringBuffer buffer = new StringBuffer();
 
-   public IChatComponent getDisplayName() {
-      return new ChatComponentText(this.getName());
-   }
+    /**
+     * Get the name of this object. For players this returns their username
+     */
+    public String getName()
+    {
+        return "Rcon";
+    }
 
-   public void addChatMessage(IChatComponent component) {
-      this.buffer.append(component.getUnformattedText());
-   }
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    public IChatComponent getDisplayName()
+    {
+        return new ChatComponentText(this.getName());
+    }
 
-   public boolean canCommandSenderUseCommand(int permLevel, String commandName) {
-      return true;
-   }
+    /**
+     * Send a chat message to the CommandSender
+     */
+    public void addChatMessage(IChatComponent component)
+    {
+        this.buffer.append(component.getUnformattedText());
+    }
 
-   public BlockPos getPosition() {
-      return new BlockPos(0, 0, 0);
-   }
+    /**
+     * Returns {@code true} if the CommandSender is allowed to execute the command, {@code false} if not
+     */
+    public boolean canCommandSenderUseCommand(int permLevel, String commandName)
+    {
+        return true;
+    }
 
-   public Vec3 getPositionVector() {
-      return new Vec3(0.0D, 0.0D, 0.0D);
-   }
+    /**
+     * Get the position in the world. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
+     * the coordinates 0, 0, 0
+     */
+    public BlockPos getPosition()
+    {
+        return new BlockPos(0, 0, 0);
+    }
 
-   public World getEntityWorld() {
-      return MinecraftServer.getServer().getEntityWorld();
-   }
+    /**
+     * Get the position vector. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return 0.0D,
+     * 0.0D, 0.0D
+     */
+    public Vec3 getPositionVector()
+    {
+        return new Vec3(0.0D, 0.0D, 0.0D);
+    }
 
-   public Entity getCommandSenderEntity() {
-      return null;
-   }
+    /**
+     * Get the world, if available. <b>{@code null} is not allowed!</b> If you are not an entity in the world, return
+     * the overworld
+     */
+    public World getEntityWorld()
+    {
+        return MinecraftServer.getServer().getEntityWorld();
+    }
 
-   public boolean sendCommandFeedback() {
-      return true;
-   }
+    /**
+     * Returns the entity associated with the command sender. MAY BE NULL!
+     */
+    public Entity getCommandSenderEntity()
+    {
+        return null;
+    }
 
-   public void setCommandStat(CommandResultStats.Type type, int amount) {
-   }
+    /**
+     * Returns true if the command sender should be sent feedback about executed commands
+     */
+    public boolean sendCommandFeedback()
+    {
+        return true;
+    }
+
+    public void setCommandStat(CommandResultStats.Type type, int amount)
+    {
+    }
 }

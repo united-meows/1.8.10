@@ -8,37 +8,56 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
-public class S0APacketUseBed implements Packet<INetHandlerPlayClient> {
-   private int playerID;
-   private BlockPos bedPos;
+public class S0APacketUseBed implements Packet<INetHandlerPlayClient>
+{
+    private int playerID;
 
-   public S0APacketUseBed() {
-   }
+    /** Block location of the head part of the bed */
+    private BlockPos bedPos;
 
-   public S0APacketUseBed(EntityPlayer player, BlockPos bedPosIn) {
-      this.playerID = player.getEntityId();
-      this.bedPos = bedPosIn;
-   }
+    public S0APacketUseBed()
+    {
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      this.playerID = buf.readVarIntFromBuffer();
-      this.bedPos = buf.readBlockPos();
-   }
+    public S0APacketUseBed(EntityPlayer player, BlockPos bedPosIn)
+    {
+        this.playerID = player.getEntityId();
+        this.bedPos = bedPosIn;
+    }
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      buf.writeVarIntToBuffer(this.playerID);
-      buf.writeBlockPos(this.bedPos);
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.playerID = buf.readVarIntFromBuffer();
+        this.bedPos = buf.readBlockPos();
+    }
 
-   public void processPacket(INetHandlerPlayClient handler) {
-      handler.handleUseBed(this);
-   }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeVarIntToBuffer(this.playerID);
+        buf.writeBlockPos(this.bedPos);
+    }
 
-   public EntityPlayer getPlayer(World worldIn) {
-      return (EntityPlayer)worldIn.getEntityByID(this.playerID);
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayClient handler)
+    {
+        handler.handleUseBed(this);
+    }
 
-   public BlockPos getBedPosition() {
-      return this.bedPos;
-   }
+    public EntityPlayer getPlayer(World worldIn)
+    {
+        return (EntityPlayer)worldIn.getEntityByID(this.playerID);
+    }
+
+    public BlockPos getBedPosition()
+    {
+        return this.bedPos;
+    }
 }

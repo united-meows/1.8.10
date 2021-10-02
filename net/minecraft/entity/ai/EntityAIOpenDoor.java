@@ -2,33 +2,57 @@ package net.minecraft.entity.ai;
 
 import net.minecraft.entity.EntityLiving;
 
-public class EntityAIOpenDoor extends EntityAIDoorInteract {
-   boolean closeDoor;
-   int closeDoorTemporisation;
+public class EntityAIOpenDoor extends EntityAIDoorInteract
+{
+    /** If the entity close the door */
+    boolean closeDoor;
 
-   public EntityAIOpenDoor(EntityLiving entitylivingIn, boolean shouldClose) {
-      super(entitylivingIn);
-      this.theEntity = entitylivingIn;
-      this.closeDoor = shouldClose;
-   }
+    /**
+     * The temporisation before the entity close the door (in ticks, always 20 = 1 second)
+     */
+    int closeDoorTemporisation;
 
-   public boolean continueExecuting() {
-      return this.closeDoor && this.closeDoorTemporisation > 0 && super.continueExecuting();
-   }
+    public EntityAIOpenDoor(EntityLiving entitylivingIn, boolean shouldClose)
+    {
+        super(entitylivingIn);
+        this.theEntity = entitylivingIn;
+        this.closeDoor = shouldClose;
+    }
 
-   public void startExecuting() {
-      this.closeDoorTemporisation = 20;
-      this.doorBlock.toggleDoor(this.theEntity.worldObj, this.doorPosition, true);
-   }
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
+    {
+        return this.closeDoor && this.closeDoorTemporisation > 0 && super.continueExecuting();
+    }
 
-   public void resetTask() {
-      if(this.closeDoor) {
-         this.doorBlock.toggleDoor(this.theEntity.worldObj, this.doorPosition, false);
-      }
-   }
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
+    {
+        this.closeDoorTemporisation = 20;
+        this.doorBlock.toggleDoor(this.theEntity.worldObj, this.doorPosition, true);
+    }
 
-   public void updateTask() {
-      --this.closeDoorTemporisation;
-      super.updateTask();
-   }
+    /**
+     * Resets the task
+     */
+    public void resetTask()
+    {
+        if (this.closeDoor)
+        {
+            this.doorBlock.toggleDoor(this.theEntity.worldObj, this.doorPosition, false);
+        }
+    }
+
+    /**
+     * Updates the task
+     */
+    public void updateTask()
+    {
+        --this.closeDoorTemporisation;
+        super.updateTask();
+    }
 }

@@ -5,14 +5,29 @@ import net.minecraft.world.MinecraftException;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 
-public interface IChunkLoader {
-   Chunk loadChunk(World worldIn, int x, int z) throws IOException;
+public interface IChunkLoader
+{
+    /**
+     * Loads the specified(XZ) chunk into the specified world.
+     */
+    Chunk loadChunk(World worldIn, int x, int z) throws IOException;
 
-   void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException;
+    void saveChunk(World worldIn, Chunk chunkIn) throws MinecraftException, IOException;
 
-   void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException;
+    /**
+     * Save extra data associated with this Chunk not normally saved during autosave, only during chunk unload.
+     * Currently unused.
+     */
+    void saveExtraChunkData(World worldIn, Chunk chunkIn) throws IOException;
 
-   void chunkTick();
+    /**
+     * Called every World.tick()
+     */
+    void chunkTick();
 
-   void saveExtraData();
+    /**
+     * Save extra data not associated with any Chunk.  Not saved during autosave, only during world unload.  Currently
+     * unused.
+     */
+    void saveExtraData();
 }

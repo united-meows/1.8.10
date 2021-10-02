@@ -9,88 +9,161 @@ import net.minecraft.util.IChatComponent;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.StatCollector;
 
-public class Achievement extends StatBase {
-   public final int displayColumn;
-   public final int displayRow;
-   public final Achievement parentAchievement;
-   private final String achievementDescription;
-   private IStatStringFormat statStringFormatter;
-   public final ItemStack theItemStack;
-   private boolean isSpecial;
+public class Achievement extends StatBase
+{
+    /**
+     * Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
+    public final int displayColumn;
 
-   public Achievement(String p_i46327_1_, String p_i46327_2_, int column, int row, Item p_i46327_5_, Achievement parent) {
-      this(p_i46327_1_, p_i46327_2_, column, row, new ItemStack(p_i46327_5_), parent);
-   }
+    /**
+     * Is the row (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
+    public final int displayRow;
 
-   public Achievement(String p_i45301_1_, String p_i45301_2_, int column, int row, Block p_i45301_5_, Achievement parent) {
-      this(p_i45301_1_, p_i45301_2_, column, row, new ItemStack(p_i45301_5_), parent);
-   }
+    /**
+     * Holds the parent achievement, that must be taken before this achievement is avaiable.
+     */
+    public final Achievement parentAchievement;
 
-   public Achievement(String p_i45302_1_, String p_i45302_2_, int column, int row, ItemStack p_i45302_5_, Achievement parent) {
-      super(p_i45302_1_, new ChatComponentTranslation("achievement." + p_i45302_2_, new Object[0]));
-      this.theItemStack = p_i45302_5_;
-      this.achievementDescription = "achievement." + p_i45302_2_ + ".desc";
-      this.displayColumn = column;
-      this.displayRow = row;
-      if(column < AchievementList.minDisplayColumn) {
-         AchievementList.minDisplayColumn = column;
-      }
+    /**
+     * Holds the description of the achievement, ready to be formatted and/or displayed.
+     */
+    private final String achievementDescription;
 
-      if(row < AchievementList.minDisplayRow) {
-         AchievementList.minDisplayRow = row;
-      }
+    /**
+     * Holds a string formatter for the achievement, some of then needs extra dynamic info - like the key used to open
+     * the inventory.
+     */
+    private IStatStringFormat statStringFormatter;
 
-      if(column > AchievementList.maxDisplayColumn) {
-         AchievementList.maxDisplayColumn = column;
-      }
+    /**
+     * Holds the ItemStack that will be used to draw the achievement into the GUI.
+     */
+    public final ItemStack theItemStack;
 
-      if(row > AchievementList.maxDisplayRow) {
-         AchievementList.maxDisplayRow = row;
-      }
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
+    private boolean isSpecial;
 
-      this.parentAchievement = parent;
-   }
+    public Achievement(String statIdIn, String unlocalizedName, int column, int row, Item itemIn, Achievement parent)
+    {
+        this(statIdIn, unlocalizedName, column, row, new ItemStack(itemIn), parent);
+    }
 
-   public Achievement initIndependentStat() {
-      this.isIndependent = true;
-      return this;
-   }
+    public Achievement(String statIdIn, String unlocalizedName, int column, int row, Block blockIn, Achievement parent)
+    {
+        this(statIdIn, unlocalizedName, column, row, new ItemStack(blockIn), parent);
+    }
 
-   public Achievement setSpecial() {
-      this.isSpecial = true;
-      return this;
-   }
+    public Achievement(String statIdIn, String unlocalizedName, int column, int row, ItemStack stack, Achievement parent)
+    {
+        super(statIdIn, new ChatComponentTranslation("achievement." + unlocalizedName, new Object[0]));
+        this.theItemStack = stack;
+        this.achievementDescription = "achievement." + unlocalizedName + ".desc";
+        this.displayColumn = column;
+        this.displayRow = row;
 
-   public Achievement registerStat() {
-      super.registerStat();
-      AchievementList.achievementList.add(this);
-      return this;
-   }
+        if (column < AchievementList.minDisplayColumn)
+        {
+            AchievementList.minDisplayColumn = column;
+        }
 
-   public boolean isAchievement() {
-      return true;
-   }
+        if (row < AchievementList.minDisplayRow)
+        {
+            AchievementList.minDisplayRow = row;
+        }
 
-   public IChatComponent getStatName() {
-      IChatComponent ichatcomponent = super.getStatName();
-      ichatcomponent.getChatStyle().setColor(this.getSpecial()?EnumChatFormatting.DARK_PURPLE:EnumChatFormatting.GREEN);
-      return ichatcomponent;
-   }
+        if (column > AchievementList.maxDisplayColumn)
+        {
+            AchievementList.maxDisplayColumn = column;
+        }
 
-   public Achievement func_150953_b(Class<? extends IJsonSerializable> p_150953_1_) {
-      return (Achievement)super.func_150953_b(p_150953_1_);
-   }
+        if (row > AchievementList.maxDisplayRow)
+        {
+            AchievementList.maxDisplayRow = row;
+        }
 
-   public String getDescription() {
-      return this.statStringFormatter != null?this.statStringFormatter.formatString(StatCollector.translateToLocal(this.achievementDescription)):StatCollector.translateToLocal(this.achievementDescription);
-   }
+        this.parentAchievement = parent;
+    }
 
-   public Achievement setStatStringFormatter(IStatStringFormat p_75988_1_) {
-      this.statStringFormatter = p_75988_1_;
-      return this;
-   }
+    /**
+     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
+     * current instance.
+     */
+    public Achievement initIndependentStat()
+    {
+        this.isIndependent = true;
+        return this;
+    }
 
-   public boolean getSpecial() {
-      return this.isSpecial;
-   }
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
+    public Achievement setSpecial()
+    {
+        this.isSpecial = true;
+        return this;
+    }
+
+    /**
+     * Register the stat into StatList.
+     */
+    public Achievement registerStat()
+    {
+        super.registerStat();
+        AchievementList.achievementList.add(this);
+        return this;
+    }
+
+    /**
+     * Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
+     */
+    public boolean isAchievement()
+    {
+        return true;
+    }
+
+    public IChatComponent getStatName()
+    {
+        IChatComponent ichatcomponent = super.getStatName();
+        ichatcomponent.getChatStyle().setColor(this.getSpecial() ? EnumChatFormatting.DARK_PURPLE : EnumChatFormatting.GREEN);
+        return ichatcomponent;
+    }
+
+    public Achievement func_150953_b(Class <? extends IJsonSerializable > p_150953_1_)
+    {
+        return (Achievement)super.func_150953_b(p_150953_1_);
+    }
+
+    /**
+     * Returns the fully description of the achievement - ready to be displayed on screen.
+     */
+    public String getDescription()
+    {
+        return this.statStringFormatter != null ? this.statStringFormatter.formatString(StatCollector.translateToLocal(this.achievementDescription)) : StatCollector.translateToLocal(this.achievementDescription);
+    }
+
+    /**
+     * Defines a string formatter for the achievement.
+     *  
+     * @param statStringFormatterIn 1.8.9
+     */
+    public Achievement setStatStringFormatter(IStatStringFormat statStringFormatterIn)
+    {
+        this.statStringFormatter = statStringFormatterIn;
+        return this;
+    }
+
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
+    public boolean getSpecial()
+    {
+        return this.isSpecial;
+    }
 }

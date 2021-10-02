@@ -1,7 +1,9 @@
 package net.minecraft.world;
 
-public class MinecraftException extends Exception {
-   public MinecraftException(String msg) {
-      super(msg);
-   }
+public class MinecraftException extends Exception
+{
+    public MinecraftException(String msg)
+    {
+        super(msg);
+    }
 }

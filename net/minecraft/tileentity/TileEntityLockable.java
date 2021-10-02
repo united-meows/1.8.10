@@ -8,34 +8,46 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.ILockableContainer;
 import net.minecraft.world.LockCode;
 
-public abstract class TileEntityLockable extends TileEntity implements IInteractionObject, ILockableContainer {
-   private LockCode code = LockCode.EMPTY_CODE;
+public abstract class TileEntityLockable extends TileEntity implements IInteractionObject, ILockableContainer
+{
+    private LockCode code = LockCode.EMPTY_CODE;
 
-   public void readFromNBT(NBTTagCompound compound) {
-      super.readFromNBT(compound);
-      this.code = LockCode.fromNBT(compound);
-   }
+    public void readFromNBT(NBTTagCompound compound)
+    {
+        super.readFromNBT(compound);
+        this.code = LockCode.fromNBT(compound);
+    }
 
-   public void writeToNBT(NBTTagCompound compound) {
-      super.writeToNBT(compound);
-      if(this.code != null) {
-         this.code.toNBT(compound);
-      }
-   }
+    public void writeToNBT(NBTTagCompound compound)
+    {
+        super.writeToNBT(compound);
 
-   public boolean isLocked() {
-      return this.code != null && !this.code.isEmpty();
-   }
+        if (this.code != null)
+        {
+            this.code.toNBT(compound);
+        }
+    }
 
-   public LockCode getLockCode() {
-      return this.code;
-   }
+    public boolean isLocked()
+    {
+        return this.code != null && !this.code.isEmpty();
+    }
 
-   public void setLockCode(LockCode code) {
-      this.code = code;
-   }
+    public LockCode getLockCode()
+    {
+        return this.code;
+    }
 
-   public IChatComponent getDisplayName() {
-      return (IChatComponent)(this.hasCustomName()?new ChatComponentText(this.getName()):new ChatComponentTranslation(this.getName(), new Object[0]));
-   }
+    public void setLockCode(LockCode code)
+    {
+        this.code = code;
+    }
+
+    /**
+     * Get the formatted ChatComponent that will be used for the sender's username in chat
+     */
+    public IChatComponent getDisplayName()
+    {
+        return (IChatComponent)(this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName(), new Object[0]));
+    }
 }

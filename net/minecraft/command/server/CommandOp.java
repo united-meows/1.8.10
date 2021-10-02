@@ -10,48 +10,78 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 
-public class CommandOp extends CommandBase {
-   public String getCommandName() {
-      return "op";
-   }
+public class CommandOp extends CommandBase
+{
+    /**
+     * Gets the name of the command
+     */
+    public String getCommandName()
+    {
+        return "op";
+    }
 
-   public int getRequiredPermissionLevel() {
-      return 3;
-   }
+    /**
+     * Return the required permission level for this command.
+     */
+    public int getRequiredPermissionLevel()
+    {
+        return 3;
+    }
 
-   public String getCommandUsage(ICommandSender sender) {
-      return "commands.op.usage";
-   }
+    /**
+     * Gets the usage string for the command.
+     */
+    public String getCommandUsage(ICommandSender sender)
+    {
+        return "commands.op.usage";
+    }
 
-   public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-      if(args.length == 1 && args[0].length() > 0) {
-         MinecraftServer minecraftserver = MinecraftServer.getServer();
-         GameProfile gameprofile = minecraftserver.getPlayerProfileCache().getGameProfileForUsername(args[0]);
-         if(gameprofile == null) {
-            throw new CommandException("commands.op.failed", new Object[]{args[0]});
-         } else {
-            minecraftserver.getConfigurationManager().addOp(gameprofile);
-            notifyOperators(sender, this, "commands.op.success", new Object[]{args[0]});
-         }
-      } else {
-         throw new WrongUsageException("commands.op.usage", new Object[0]);
-      }
-   }
+    /**
+     * Callback when the command is invoked
+     */
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
+        if (args.length == 1 && args[0].length() > 0)
+        {
+            MinecraftServer minecraftserver = MinecraftServer.getServer();
+            GameProfile gameprofile = minecraftserver.getPlayerProfileCache().getGameProfileForUsername(args[0]);
 
-   public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-      if(args.length == 1) {
-         String s = args[args.length - 1];
-         List<String> list = Lists.<String>newArrayList();
-
-         for(GameProfile gameprofile : MinecraftServer.getServer().getGameProfiles()) {
-            if(!MinecraftServer.getServer().getConfigurationManager().canSendCommands(gameprofile) && doesStringStartWith(s, gameprofile.getName())) {
-               list.add(gameprofile.getName());
+            if (gameprofile == null)
+            {
+                throw new CommandException("commands.op.failed", new Object[] {args[0]});
             }
-         }
+            else
+            {
+                minecraftserver.getConfigurationManager().addOp(gameprofile);
+                notifyOperators(sender, this, "commands.op.success", new Object[] {args[0]});
+            }
+        }
+        else
+        {
+            throw new WrongUsageException("commands.op.usage", new Object[0]);
+        }
+    }
 
-         return list;
-      } else {
-         return null;
-      }
-   }
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if (args.length == 1)
+        {
+            String s = args[args.length - 1];
+            List<String> list = Lists.<String>newArrayList();
+
+            for (GameProfile gameprofile : MinecraftServer.getServer().getGameProfiles())
+            {
+                if (!MinecraftServer.getServer().getConfigurationManager().canSendCommands(gameprofile) && doesStringStartWith(s, gameprofile.getName()))
+                {
+                    list.add(gameprofile.getName());
+                }
+            }
+
+            return list;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

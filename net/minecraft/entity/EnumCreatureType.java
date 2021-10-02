@@ -7,39 +7,55 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityWaterMob;
 import net.minecraft.entity.passive.IAnimals;
 
-public enum EnumCreatureType {
-   MONSTER(IMob.class, 70, Material.air, false, false),
-   CREATURE(EntityAnimal.class, 10, Material.air, true, true),
-   AMBIENT(EntityAmbientCreature.class, 15, Material.air, true, false),
-   WATER_CREATURE(EntityWaterMob.class, 5, Material.water, true, false);
+public enum EnumCreatureType
+{
+    MONSTER(IMob.class, 70, Material.air, false, false),
+    CREATURE(EntityAnimal.class, 10, Material.air, true, true),
+    AMBIENT(EntityAmbientCreature.class, 15, Material.air, true, false),
+    WATER_CREATURE(EntityWaterMob.class, 5, Material.water, true, false);
 
-   private final Class<? extends IAnimals> creatureClass;
-   private final int maxNumberOfCreature;
-   private final Material creatureMaterial;
-   private final boolean isPeacefulCreature;
-   private final boolean isAnimal;
+    private final Class <? extends IAnimals > creatureClass;
+    private final int maxNumberOfCreature;
+    private final Material creatureMaterial;
 
-   private EnumCreatureType(Class<? extends IAnimals> creatureClassIn, int maxNumberOfCreatureIn, Material creatureMaterialIn, boolean isPeacefulCreatureIn, boolean isAnimalIn) {
-      this.creatureClass = creatureClassIn;
-      this.maxNumberOfCreature = maxNumberOfCreatureIn;
-      this.creatureMaterial = creatureMaterialIn;
-      this.isPeacefulCreature = isPeacefulCreatureIn;
-      this.isAnimal = isAnimalIn;
-   }
+    /** A flag indicating whether this creature type is peaceful. */
+    private final boolean isPeacefulCreature;
 
-   public Class<? extends IAnimals> getCreatureClass() {
-      return this.creatureClass;
-   }
+    /** Whether this creature type is an animal. */
+    private final boolean isAnimal;
 
-   public int getMaxNumberOfCreature() {
-      return this.maxNumberOfCreature;
-   }
+    private EnumCreatureType(Class <? extends IAnimals > creatureClassIn, int maxNumberOfCreatureIn, Material creatureMaterialIn, boolean isPeacefulCreatureIn, boolean isAnimalIn)
+    {
+        this.creatureClass = creatureClassIn;
+        this.maxNumberOfCreature = maxNumberOfCreatureIn;
+        this.creatureMaterial = creatureMaterialIn;
+        this.isPeacefulCreature = isPeacefulCreatureIn;
+        this.isAnimal = isAnimalIn;
+    }
 
-   public boolean getPeacefulCreature() {
-      return this.isPeacefulCreature;
-   }
+    public Class <? extends IAnimals > getCreatureClass()
+    {
+        return this.creatureClass;
+    }
 
-   public boolean getAnimal() {
-      return this.isAnimal;
-   }
+    public int getMaxNumberOfCreature()
+    {
+        return this.maxNumberOfCreature;
+    }
+
+    /**
+     * Gets whether or not this creature type is peaceful.
+     */
+    public boolean getPeacefulCreature()
+    {
+        return this.isPeacefulCreature;
+    }
+
+    /**
+     * Return whether this creature type is an animal.
+     */
+    public boolean getAnimal()
+    {
+        return this.isAnimal;
+    }
 }

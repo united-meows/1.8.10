@@ -9,37 +9,52 @@ import org.apache.commons.lang3.Validate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class RegistrySimple<K, V> implements IRegistry<K, V> {
-   private static final Logger logger = LogManager.getLogger();
-   protected final Map<K, V> registryObjects = this.createUnderlyingMap();
+public class RegistrySimple<K, V> implements IRegistry<K, V>
+{
+    private static final Logger logger = LogManager.getLogger();
+    protected final Map<K, V> registryObjects = this.createUnderlyingMap();
 
-   protected Map<K, V> createUnderlyingMap() {
-      return Maps.<K, V>newHashMap();
-   }
+    protected Map<K, V> createUnderlyingMap()
+    {
+        return Maps.<K, V>newHashMap();
+    }
 
-   public V getObject(K name) {
-      return this.registryObjects.get(name);
-   }
+    public V getObject(K name)
+    {
+        return this.registryObjects.get(name);
+    }
 
-   public void putObject(K p_82595_1_, V p_82595_2_) {
-      Validate.notNull(p_82595_1_);
-      Validate.notNull(p_82595_2_);
-      if(this.registryObjects.containsKey(p_82595_1_)) {
-         logger.debug("Adding duplicate key \'" + p_82595_1_ + "\' to registry");
-      }
+    /**
+     * Register an object on this registry.
+     */
+    public void putObject(K key, V value)
+    {
+        Validate.notNull(key);
+        Validate.notNull(value);
 
-      this.registryObjects.put(p_82595_1_, p_82595_2_);
-   }
+        if (this.registryObjects.containsKey(key))
+        {
+            logger.debug("Adding duplicate key \'" + key + "\' to registry");
+        }
 
-   public Set<K> getKeys() {
-      return Collections.<K>unmodifiableSet(this.registryObjects.keySet());
-   }
+        this.registryObjects.put(key, value);
+    }
 
-   public boolean containsKey(K p_148741_1_) {
-      return this.registryObjects.containsKey(p_148741_1_);
-   }
+    public Set<K> getKeys()
+    {
+        return Collections.<K>unmodifiableSet(this.registryObjects.keySet());
+    }
 
-   public Iterator<V> iterator() {
-      return this.registryObjects.values().iterator();
-   }
+    /**
+     * Does this registry contain an entry for the given key?
+     */
+    public boolean containsKey(K key)
+    {
+        return this.registryObjects.containsKey(key);
+    }
+
+    public Iterator<V> iterator()
+    {
+        return this.registryObjects.values().iterator();
+    }
 }

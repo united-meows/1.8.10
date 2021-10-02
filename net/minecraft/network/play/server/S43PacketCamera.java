@@ -7,29 +7,45 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.world.World;
 
-public class S43PacketCamera implements Packet<INetHandlerPlayClient> {
-   public int entityId;
+public class S43PacketCamera implements Packet<INetHandlerPlayClient>
+{
+    public int entityId;
 
-   public S43PacketCamera() {
-   }
+    public S43PacketCamera()
+    {
+    }
 
-   public S43PacketCamera(Entity entityIn) {
-      this.entityId = entityIn.getEntityId();
-   }
+    public S43PacketCamera(Entity entityIn)
+    {
+        this.entityId = entityIn.getEntityId();
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      this.entityId = buf.readVarIntFromBuffer();
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.entityId = buf.readVarIntFromBuffer();
+    }
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      buf.writeVarIntToBuffer(this.entityId);
-   }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeVarIntToBuffer(this.entityId);
+    }
 
-   public void processPacket(INetHandlerPlayClient handler) {
-      handler.handleCamera(this);
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayClient handler)
+    {
+        handler.handleCamera(this);
+    }
 
-   public Entity getEntity(World worldIn) {
-      return worldIn.getEntityByID(this.entityId);
-   }
+    public Entity getEntity(World worldIn)
+    {
+        return worldIn.getEntityByID(this.entityId);
+    }
 }

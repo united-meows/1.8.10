@@ -9,137 +9,179 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Team;
 
-public class S3EPacketTeams implements Packet<INetHandlerPlayClient> {
-   private String field_149320_a = "";
-   private String field_149318_b = "";
-   private String field_149319_c = "";
-   private String field_149316_d = "";
-   private String field_179816_e;
-   private int field_179815_f;
-   private Collection<String> field_149317_e;
-   private int field_149314_f;
-   private int field_149315_g;
+public class S3EPacketTeams implements Packet<INetHandlerPlayClient>
+{
+    private String name = "";
+    private String displayName = "";
+    private String prefix = "";
+    private String suffix = "";
+    private String nameTagVisibility;
+    private int color;
+    private Collection<String> players;
+    private int action;
+    private int friendlyFlags;
 
-   public S3EPacketTeams() {
-      this.field_179816_e = Team.EnumVisible.ALWAYS.field_178830_e;
-      this.field_179815_f = -1;
-      this.field_149317_e = Lists.<String>newArrayList();
-   }
+    public S3EPacketTeams()
+    {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
+    }
 
-   public S3EPacketTeams(ScorePlayerTeam p_i45225_1_, int p_i45225_2_) {
-      this.field_179816_e = Team.EnumVisible.ALWAYS.field_178830_e;
-      this.field_179815_f = -1;
-      this.field_149317_e = Lists.<String>newArrayList();
-      this.field_149320_a = p_i45225_1_.getRegisteredName();
-      this.field_149314_f = p_i45225_2_;
-      if(p_i45225_2_ == 0 || p_i45225_2_ == 2) {
-         this.field_149318_b = p_i45225_1_.getTeamName();
-         this.field_149319_c = p_i45225_1_.getColorPrefix();
-         this.field_149316_d = p_i45225_1_.getColorSuffix();
-         this.field_149315_g = p_i45225_1_.func_98299_i();
-         this.field_179816_e = p_i45225_1_.getNameTagVisibility().field_178830_e;
-         this.field_179815_f = p_i45225_1_.getChatFormat().getColorIndex();
-      }
+    public S3EPacketTeams(ScorePlayerTeam teamIn, int actionIn)
+    {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
+        this.name = teamIn.getRegisteredName();
+        this.action = actionIn;
 
-      if(p_i45225_2_ == 0) {
-         this.field_149317_e.addAll(p_i45225_1_.getMembershipCollection());
-      }
-   }
+        if (actionIn == 0 || actionIn == 2)
+        {
+            this.displayName = teamIn.getTeamName();
+            this.prefix = teamIn.getColorPrefix();
+            this.suffix = teamIn.getColorSuffix();
+            this.friendlyFlags = teamIn.func_98299_i();
+            this.nameTagVisibility = teamIn.getNameTagVisibility().internalName;
+            this.color = teamIn.getChatFormat().getColorIndex();
+        }
 
-   public S3EPacketTeams(ScorePlayerTeam p_i45226_1_, Collection<String> p_i45226_2_, int p_i45226_3_) {
-      this.field_179816_e = Team.EnumVisible.ALWAYS.field_178830_e;
-      this.field_179815_f = -1;
-      this.field_149317_e = Lists.<String>newArrayList();
-      if(p_i45226_3_ != 3 && p_i45226_3_ != 4) {
-         throw new IllegalArgumentException("Method must be join or leave for player constructor");
-      } else if(p_i45226_2_ != null && !p_i45226_2_.isEmpty()) {
-         this.field_149314_f = p_i45226_3_;
-         this.field_149320_a = p_i45226_1_.getRegisteredName();
-         this.field_149317_e.addAll(p_i45226_2_);
-      } else {
-         throw new IllegalArgumentException("Players cannot be null/empty");
-      }
-   }
+        if (actionIn == 0)
+        {
+            this.players.addAll(teamIn.getMembershipCollection());
+        }
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      this.field_149320_a = buf.readStringFromBuffer(16);
-      this.field_149314_f = buf.readByte();
-      if(this.field_149314_f == 0 || this.field_149314_f == 2) {
-         this.field_149318_b = buf.readStringFromBuffer(32);
-         this.field_149319_c = buf.readStringFromBuffer(16);
-         this.field_149316_d = buf.readStringFromBuffer(16);
-         this.field_149315_g = buf.readByte();
-         this.field_179816_e = buf.readStringFromBuffer(32);
-         this.field_179815_f = buf.readByte();
-      }
+    public S3EPacketTeams(ScorePlayerTeam teamIn, Collection<String> playersIn, int actionIn)
+    {
+        this.nameTagVisibility = Team.EnumVisible.ALWAYS.internalName;
+        this.color = -1;
+        this.players = Lists.<String>newArrayList();
 
-      if(this.field_149314_f == 0 || this.field_149314_f == 3 || this.field_149314_f == 4) {
-         int i = buf.readVarIntFromBuffer();
+        if (actionIn != 3 && actionIn != 4)
+        {
+            throw new IllegalArgumentException("Method must be join or leave for player constructor");
+        }
+        else if (playersIn != null && !playersIn.isEmpty())
+        {
+            this.action = actionIn;
+            this.name = teamIn.getRegisteredName();
+            this.players.addAll(playersIn);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Players cannot be null/empty");
+        }
+    }
 
-         for(int j = 0; j < i; ++j) {
-            this.field_149317_e.add(buf.readStringFromBuffer(40));
-         }
-      }
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.name = buf.readStringFromBuffer(16);
+        this.action = buf.readByte();
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      buf.writeString(this.field_149320_a);
-      buf.writeByte(this.field_149314_f);
-      if(this.field_149314_f == 0 || this.field_149314_f == 2) {
-         buf.writeString(this.field_149318_b);
-         buf.writeString(this.field_149319_c);
-         buf.writeString(this.field_149316_d);
-         buf.writeByte(this.field_149315_g);
-         buf.writeString(this.field_179816_e);
-         buf.writeByte(this.field_179815_f);
-      }
+        if (this.action == 0 || this.action == 2)
+        {
+            this.displayName = buf.readStringFromBuffer(32);
+            this.prefix = buf.readStringFromBuffer(16);
+            this.suffix = buf.readStringFromBuffer(16);
+            this.friendlyFlags = buf.readByte();
+            this.nameTagVisibility = buf.readStringFromBuffer(32);
+            this.color = buf.readByte();
+        }
 
-      if(this.field_149314_f == 0 || this.field_149314_f == 3 || this.field_149314_f == 4) {
-         buf.writeVarIntToBuffer(this.field_149317_e.size());
+        if (this.action == 0 || this.action == 3 || this.action == 4)
+        {
+            int i = buf.readVarIntFromBuffer();
 
-         for(String s : this.field_149317_e) {
-            buf.writeString(s);
-         }
-      }
-   }
+            for (int j = 0; j < i; ++j)
+            {
+                this.players.add(buf.readStringFromBuffer(40));
+            }
+        }
+    }
 
-   public void processPacket(INetHandlerPlayClient handler) {
-      handler.handleTeams(this);
-   }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeString(this.name);
+        buf.writeByte(this.action);
 
-   public String func_149312_c() {
-      return this.field_149320_a;
-   }
+        if (this.action == 0 || this.action == 2)
+        {
+            buf.writeString(this.displayName);
+            buf.writeString(this.prefix);
+            buf.writeString(this.suffix);
+            buf.writeByte(this.friendlyFlags);
+            buf.writeString(this.nameTagVisibility);
+            buf.writeByte(this.color);
+        }
 
-   public String func_149306_d() {
-      return this.field_149318_b;
-   }
+        if (this.action == 0 || this.action == 3 || this.action == 4)
+        {
+            buf.writeVarIntToBuffer(this.players.size());
 
-   public String func_149311_e() {
-      return this.field_149319_c;
-   }
+            for (String s : this.players)
+            {
+                buf.writeString(s);
+            }
+        }
+    }
 
-   public String func_149309_f() {
-      return this.field_149316_d;
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(INetHandlerPlayClient handler)
+    {
+        handler.handleTeams(this);
+    }
 
-   public Collection<String> func_149310_g() {
-      return this.field_149317_e;
-   }
+    public String getName()
+    {
+        return this.name;
+    }
 
-   public int func_149307_h() {
-      return this.field_149314_f;
-   }
+    public String getDisplayName()
+    {
+        return this.displayName;
+    }
 
-   public int func_149308_i() {
-      return this.field_149315_g;
-   }
+    public String getPrefix()
+    {
+        return this.prefix;
+    }
 
-   public int func_179813_h() {
-      return this.field_179815_f;
-   }
+    public String getSuffix()
+    {
+        return this.suffix;
+    }
 
-   public String func_179814_i() {
-      return this.field_179816_e;
-   }
+    public Collection<String> getPlayers()
+    {
+        return this.players;
+    }
+
+    public int getAction()
+    {
+        return this.action;
+    }
+
+    public int getFriendlyFlags()
+    {
+        return this.friendlyFlags;
+    }
+
+    public int getColor()
+    {
+        return this.color;
+    }
+
+    public String getNameTagVisibility()
+    {
+        return this.nameTagVisibility;
+    }
 }

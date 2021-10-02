@@ -5,41 +5,58 @@ import com.mojang.authlib.GameProfile;
 import java.util.Date;
 import java.util.UUID;
 
-public class UserListBansEntry extends BanEntry<GameProfile> {
-   public UserListBansEntry(GameProfile profile) {
-      this(profile, (Date)null, (String)null, (Date)null, (String)null);
-   }
+public class UserListBansEntry extends BanEntry<GameProfile>
+{
+    public UserListBansEntry(GameProfile profile)
+    {
+        this(profile, (Date)null, (String)null, (Date)null, (String)null);
+    }
 
-   public UserListBansEntry(GameProfile profile, Date startDate, String banner, Date endDate, String banReason) {
-      super(profile, endDate, banner, endDate, banReason);
-   }
+    public UserListBansEntry(GameProfile profile, Date startDate, String banner, Date endDate, String banReason)
+    {
+        super(profile, endDate, banner, endDate, banReason);
+    }
 
-   public UserListBansEntry(JsonObject p_i1136_1_) {
-      super(func_152648_b(p_i1136_1_), p_i1136_1_);
-   }
+    public UserListBansEntry(JsonObject json)
+    {
+        super(toGameProfile(json), json);
+    }
 
-   protected void onSerialization(JsonObject data) {
-      if(this.getValue() != null) {
-         data.addProperty("uuid", ((GameProfile)this.getValue()).getId() == null?"":((GameProfile)this.getValue()).getId().toString());
-         data.addProperty("name", ((GameProfile)this.getValue()).getName());
-         super.onSerialization(data);
-      }
-   }
+    protected void onSerialization(JsonObject data)
+    {
+        if (this.getValue() != null)
+        {
+            data.addProperty("uuid", ((GameProfile)this.getValue()).getId() == null ? "" : ((GameProfile)this.getValue()).getId().toString());
+            data.addProperty("name", ((GameProfile)this.getValue()).getName());
+            super.onSerialization(data);
+        }
+    }
 
-   private static GameProfile func_152648_b(JsonObject p_152648_0_) {
-      if(p_152648_0_.has("uuid") && p_152648_0_.has("name")) {
-         String s = p_152648_0_.get("uuid").getAsString();
+    /**
+     * Convert a {@linkplain com.google.gson.JsonObject JsonObject} into a {@linkplain com.mojang.authlib.GameProfile}.
+     * The json object must have {@code uuid} and {@code name} attributes or {@code null} will be returned.
+     */
+    private static GameProfile toGameProfile(JsonObject json)
+    {
+        if (json.has("uuid") && json.has("name"))
+        {
+            String s = json.get("uuid").getAsString();
+            UUID uuid;
 
-         UUID uuid;
-         try {
-            uuid = UUID.fromString(s);
-         } catch (Throwable var4) {
+            try
+            {
+                uuid = UUID.fromString(s);
+            }
+            catch (Throwable var4)
+            {
+                return null;
+            }
+
+            return new GameProfile(uuid, json.get("name").getAsString());
+        }
+        else
+        {
             return null;
-         }
-
-         return new GameProfile(uuid, p_152648_0_.get("name").getAsString());
-      } else {
-         return null;
-      }
-   }
+        }
+    }
 }

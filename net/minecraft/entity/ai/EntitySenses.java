@@ -5,36 +5,55 @@ import java.util.List;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 
-public class EntitySenses {
-   EntityLiving entityObj;
-   List<Entity> seenEntities = Lists.<Entity>newArrayList();
-   List<Entity> unseenEntities = Lists.<Entity>newArrayList();
+public class EntitySenses
+{
+    EntityLiving entityObj;
+    List<Entity> seenEntities = Lists.<Entity>newArrayList();
+    List<Entity> unseenEntities = Lists.<Entity>newArrayList();
 
-   public EntitySenses(EntityLiving entityObjIn) {
-      this.entityObj = entityObjIn;
-   }
+    public EntitySenses(EntityLiving entityObjIn)
+    {
+        this.entityObj = entityObjIn;
+    }
 
-   public void clearSensingCache() {
-      this.seenEntities.clear();
-      this.unseenEntities.clear();
-   }
+    /**
+     * Clears canSeeCachePositive and canSeeCacheNegative.
+     */
+    public void clearSensingCache()
+    {
+        this.seenEntities.clear();
+        this.unseenEntities.clear();
+    }
 
-   public boolean canSee(Entity entityIn) {
-      if(this.seenEntities.contains(entityIn)) {
-         return true;
-      } else if(this.unseenEntities.contains(entityIn)) {
-         return false;
-      } else {
-         this.entityObj.worldObj.theProfiler.startSection("canSee");
-         boolean flag = this.entityObj.canEntityBeSeen(entityIn);
-         this.entityObj.worldObj.theProfiler.endSection();
-         if(flag) {
-            this.seenEntities.add(entityIn);
-         } else {
-            this.unseenEntities.add(entityIn);
-         }
+    /**
+     * Checks, whether 'our' entity can see the entity given as argument (true) or not (false), caching the result.
+     */
+    public boolean canSee(Entity entityIn)
+    {
+        if (this.seenEntities.contains(entityIn))
+        {
+            return true;
+        }
+        else if (this.unseenEntities.contains(entityIn))
+        {
+            return false;
+        }
+        else
+        {
+            this.entityObj.worldObj.theProfiler.startSection("canSee");
+            boolean flag = this.entityObj.canEntityBeSeen(entityIn);
+            this.entityObj.worldObj.theProfiler.endSection();
 
-         return flag;
-      }
-   }
+            if (flag)
+            {
+                this.seenEntities.add(entityIn);
+            }
+            else
+            {
+                this.unseenEntities.add(entityIn);
+            }
+
+            return flag;
+        }
+    }
 }
